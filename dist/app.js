@@ -1,23 +1,33 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
+const bodyParser = require("body-parser");
 class App {
-    constructor() {
-        this.express = express();
-        this.mountRoutes();
+    constructor(controllers, port) {
+        this.app = express();
+        this.port = port;
+        this.initializeMiddlewares();
+        this.initializeControllers(controllers);
     }
     ;
-    mountRoutes() {
-        const router = express.Router();
-        router.get('/', (req, res) => {
-            res.json({
-                message: 'Hello World!'
-            });
+    initializeMiddlewares() {
+        this.app.use(bodyParser.urlencoded({ extended: false }));
+        this.app.use(bodyParser.json());
+    }
+    ;
+    initializeControllers(controllers) {
+        controllers.forEach((controller) => {
+            this.app.use('/', controller.router);
         });
-        this.express.use('/', router);
+    }
+    ;
+    listen() {
+        this.app.listen(this.port, () => {
+            console.log(`App listening on the port ${this.port}`);
+        });
     }
     ;
 }
 ;
-exports.default = new App().express;
+exports.default = App;
 //# sourceMappingURL=app.js.map

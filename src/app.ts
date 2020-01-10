@@ -1,5 +1,6 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
+import * as mongoose from 'mongoose';
  
 class App {
     public app: express.Application;
@@ -9,6 +10,7 @@ class App {
         this.app = express();
         this.port = port;
 
+        this.connectToTheDatabase();
         this.initializeMiddlewares();
         this.initializeControllers(controllers);
     };
@@ -23,6 +25,15 @@ class App {
             this.app.use('/', controller.router);
         });
     };
+
+    private connectToTheDatabase() {
+        const {
+            MONGO_USER,
+            MONGO_PASSWORD,
+            MONGO_PATH,
+        } = process.env;
+        mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`);
+    }
 
     public listen() {
         this.app.listen(this.port, () => {
