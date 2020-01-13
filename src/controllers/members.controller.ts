@@ -1,25 +1,29 @@
 import * as express from 'express';
-
-import {IMembers} from '../models/interfaces/members.interface';
+import File from '../utils/file.utility';
 import {BaseRoute} from '../routes/index';
-import memberModel from '../models/members.model';
-
+import {MemberRepo} from "../repository/members.repository";
+import {MembersEntity} from "../entities/members.entity";
+import { getRepository } from 'typeorm';
 
 export class MembersController extends BaseRoute {
- 
+
+    private memberRepo: MemberRepo = new MemberRepo();
+    private file: any;
+
     constructor() {
         super();
         this._intializeRoutes();
+        this.file = new File();
     }
     
     public _intializeRoutes() {
         this.router.get(`${this.path}/members`, this.getAllMembers);
-        this.router.post(`${this.path}/members/create`, this.createMember);
+        this.router.post(`${this.path}/member/create`, this.createMember);
     }
  
     public getAllMembers = async (request: express.Request, response: express.Response) => {
         try {
-            const members = await memberModel.find().exec();
+            const members = await this.memberRepo.getAllMembers();
 
             response.json({
                 data: members
@@ -29,18 +33,29 @@ export class MembersController extends BaseRoute {
         }
     }
  
-    public createMember = async (request: express.Request, response: express.Response) => {
+    public createMember = async (request: express.Request & {files}, response: express.Response) => {
         try {
-            const memberData: IMembers = request.body;
-            const createdMember = new memberModel(memberData);
-            const payload = await createdMember.save();
+            let member: MembersEntity = new MembersEntity();
+            const {email,firstName,lastName,telephone,role,image,twitterUrl,linkedinUrl,githubUrl} = request.body;
+        
+            member.email = email;
+            member.firstName = firstName;
+            member.lastName = lastName;
+            member.telephone = telephone;
+            member.role = role;
+            member.twitterUrl = twitterUrl;
+            member.linkedinUrl = linkedinUrl;
+            member.githubUrl = githubUrl
+            member.imageUrl = await this.file.cloudUpload(`${image}`, "ICA-Yabatech/")
+
+            const payload = await this.memberRepo.saveMember(member);
 
             response.json({
                 message: "Member created successfully",
                 data: payload
             });
         } catch (err) {
-            response.status(500).json(err);
+            response.status(500).send(err);
         }
     }
 };

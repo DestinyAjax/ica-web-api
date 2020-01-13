@@ -1,6 +1,12 @@
-import * as express from 'express';
-import * as bodyParser from 'body-parser';
-import * as mongoose from 'mongoose';
+import "reflect-metadata";
+import * as express from "express";
+import * as bodyParser from "body-parser";
+import * as cors from "cors";
+import * as fileupload from "express-fileupload";
+import * as appConfig from "../src/utils/app.config";
+import {createConnection} from "typeorm";
+
+import errorMiddleware from "./middleware/error.middleware";
  
 class App {
     public app: express.Application;
@@ -13,33 +19,40 @@ class App {
         this.connectToTheDatabase();
         this.initializeMiddlewares();
         this.initializeControllers(controllers);
-    };
+        this.initializeErrorHandler();
+    }
 
     private initializeMiddlewares() {
         this.app.use(bodyParser.urlencoded({extended: false}));
         this.app.use(bodyParser.json());
-    };
+        this.app.use(cors());
+        this.app.use(fileupload());
+    }
 
     private initializeControllers(controllers) {
         controllers.forEach((controller) => {
             this.app.use('/', controller.router);
         });
-    };
+    }
 
-    private connectToTheDatabase() {
-        const {
-            MONGO_USER,
-            MONGO_PASSWORD,
-            MONGO_PATH,
-        } = process.env;
-        mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`);
+    private initializeErrorHandler() {
+        this.app.use(errorMiddleware);
+    }
+
+    private async connectToTheDatabase() {
+        try {
+            await createConnection(appConfig.dbOptions);
+            console.log("Database connected!");
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     public listen() {
         this.app.listen(this.port, () => {
             console.log(`App listening on the port ${this.port}`);
         });
-    };
+    }
 };
  
 export default App;
