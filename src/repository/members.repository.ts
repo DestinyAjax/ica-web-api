@@ -10,4 +10,8 @@ export class MemberRepo {
     saveMember(member: MembersEntity) { 
         return getManager().getRepository(MembersEntity).save(member);
     }
+
+    getOneMember(email: string) {
+        return getManager().getRepository(MembersEntity).findOne({email: email});
+    }
 }

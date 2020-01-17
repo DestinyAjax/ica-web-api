@@ -41,27 +41,37 @@ export class MembersController extends BaseRoute {
         try {
             let member: MembersEntity = new MembersEntity();
             const {email,firstName,lastName,telephone,role,imageUrl,twitterUrl,linkedinUrl,githubUrl} = request.body;
-            const image_url = await this.file.cloudUpload(`${imageUrl}`, "ICA-Yabatech/");
+            const check = await this.memberRepo.getOneMember(email);
+            if(check.email) {
+                response.status(400).json({
+                    message: "This email address already exist",
+                    error: true
+                });
+            }
+            else {
+                const image_url = await this.file.cloudUpload(`${imageUrl}`, "ICA-Yabatech/");
         
-            member.email = email;
-            member.firstName = firstName;
-            member.lastName = lastName;
-            member.telephone = telephone;
-            member.role = role;
-            member.twitterUrl = twitterUrl;
-            member.linkedinUrl = linkedinUrl;
-            member.githubUrl = githubUrl
-            member.imageUrl = image_url;
-            member.isActive = false;
-            const payload = await this.memberRepo.saveMember(member);
+                member.email = email;
+                member.firstName = firstName;
+                member.lastName = lastName;
+                member.telephone = telephone;
+                member.role = role;
+                member.twitterUrl = twitterUrl;
+                member.linkedinUrl = linkedinUrl;
+                member.githubUrl = githubUrl
+                member.imageUrl = image_url;
+                member.isActive = false;
+                const payload = await this.memberRepo.saveMember(member);
 
-            this.service.Email(member.email, 'New Member Registration', 
-                this.service.html('<p style="color: #000">Hello ' + member.firstName + ' ' + member.lastName + ', Thank you for registering as a member in our community. <br/><br/>We will get back to you shortly.</p>'));
+                this.service.Email(member.email, 'New Member Registration', 
+                    this.service.html('<p style="color: #000">Hello ' + member.firstName + ' ' + member.lastName + ', Thank you for registering as a member in our community. <br/><br/>We will get back to you shortly.</p>'));
 
-            response.json({
-                message: "Member created successfully",
-                data: payload
-            });
+                response.json({
+                    message: "Member created successfully",
+                    data: payload,
+                    error: false
+                });
+            }
         } catch (err) {
             response.status(500).send(err);
         }
