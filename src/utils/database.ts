@@ -10,11 +10,11 @@ const database = db_url.pathname.replace("/", "");
 
 export let dbOptions: ConnectionOptions = {
     type: "mysql",
-    host: process.env.NODE_ENV === "produdction" ? host : "localhost",
+    host: process.env.NODE_ENV === "production" ? host : "localhost",
     port: 3306,
-    username: process.env.NODE_ENV === "produdction" ? username : "root",
-    password: process.env.NODE_ENV === "produdction" ? password : "",
-    database: process.env.NODE_ENV === "produdction" ? database : "ica-yabatech",
+    username: process.env.NODE_ENV === "production" ? username : "root",
+    password: process.env.NODE_ENV === "production" ? password : "",
+    database: process.env.NODE_ENV === "production" ? database : "ica-yabatech",
     entities: [
         __dirname + '/../**/*.entity{.ts,.js}'
     ],
