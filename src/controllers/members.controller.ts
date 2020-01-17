@@ -7,7 +7,7 @@ import BaseService from "../services/base.service";
 
 export class MembersController extends BaseRoute {
 
-    private memberRepo: MemberRepo = new MemberRepo();
+    private memberRepo: MemberRepo;
     private file: any;
     private service: any;
 
@@ -16,6 +16,7 @@ export class MembersController extends BaseRoute {
         this._intializeRoutes();
         this.file = new File();
         this.service = new BaseService();
+        this.memberRepo = new MemberRepo();
     }
     
     public _intializeRoutes() {
@@ -39,7 +40,8 @@ export class MembersController extends BaseRoute {
     public createMember = async (request: express.Request & {files}, response: express.Response) => {
         try {
             let member: MembersEntity = new MembersEntity();
-            const {email,firstName,lastName,telephone,role,image,twitterUrl,linkedinUrl,githubUrl} = request.body;
+            const {email,firstName,lastName,telephone,role,imageUrl,twitterUrl,linkedinUrl,githubUrl} = request.body;
+            const image_url = await this.file.cloudUpload(`${imageUrl}`, "ICA-Yabatech/");
         
             member.email = email;
             member.firstName = firstName;
@@ -49,7 +51,7 @@ export class MembersController extends BaseRoute {
             member.twitterUrl = twitterUrl;
             member.linkedinUrl = linkedinUrl;
             member.githubUrl = githubUrl
-            member.imageUrl = this.file.cloudUpload(`${image}`, "ICA-Yabatech/");
+            member.imageUrl = image_url;
             member.isActive = false;
             const payload = await this.memberRepo.saveMember(member);
 

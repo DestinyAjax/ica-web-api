@@ -23,13 +23,11 @@ export default class File {
 
     public cloudUpload(file: any, dir: string) {
         if (typeof file !== "undefined" || file !== "" || file !== null) {
-            cloudinary.v2.uploader.upload(file, {folder: dir}, (error, result) => {
-                if(result) {
-                    return result.url;
-                }
-                if(error) {
-                    console.log(error);
-                }
+            return new Promise<any>((resolve, reject) => {
+                cloudinary.v2.uploader.upload(file, {folder: dir}, (error, result) => {
+                    resolve(result.url);
+                    reject(error);
+                });
             });
         }
         return;
