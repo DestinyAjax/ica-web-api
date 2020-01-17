@@ -53,8 +53,8 @@ export class MembersController extends BaseRoute {
             member.isActive = false;
             const payload = await this.memberRepo.saveMember(member);
 
-            this.service.Email(email, 'New Member Registration', 
-                this.service.html('<p style="color: #000">Hello ' + payload.firstName + ' ' + payload.lastName + ', Thank you for registering as a member in our community. <br/><br/>We will get back to you shortly.</p>'));
+            this.service.Email(member.email, 'New Member Registration', 
+                this.service.html('<p style="color: #000">Hello ' + member.firstName + ' ' + member.lastName + ', Thank you for registering as a member in our community. <br/><br/>We will get back to you shortly.</p>'));
 
             response.json({
                 message: "Member created successfully",
