@@ -15,16 +15,16 @@ export default class BaseService {
         });
     }
 
-    public Email(data: any, subject: string, message: string) {
+    public Email(email: any, subject: string, message: string) {
         try {
-            const email = {
+            const data = {
                 from: config.app.name,
-                to: (data.email) ? data.email : config.app.email,
+                to: (email) ? email : config.app.email,
                 subject,
                 html: message,
             };
 
-            this.client.sendMail(email, (err: Error, info: any) => {
+            this.client.sendMail(data, (err: Error, info: any) => {
                 if (err) {
                     console.log(err)
                 } else {

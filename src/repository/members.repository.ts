@@ -3,8 +3,8 @@ import {getManager} from "typeorm";
  
 export class MemberRepo {
  
-    getAllMembers() {
-        return getManager().getRepository(MembersEntity).find();
+    getAllMembers(member: MembersEntity) {
+        return getManager().getRepository(MembersEntity).find(member);
     }
  
     saveMember(member: MembersEntity) { 

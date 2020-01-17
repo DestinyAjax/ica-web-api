@@ -1,8 +1,8 @@
 export const config  = {
     app: {
         port: process.env.PORT as string,
-        name : "Test",
-        email : "adedotunolawale@gmail.com",
+        name : "ICA Yabatech",
+        email : "destinyajakaiye@gmail.com",
         JWT_SECRET: process.env.JWT_SECRET as string,
     },
     user: process.env.user as any,

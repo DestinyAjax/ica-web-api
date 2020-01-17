@@ -25,12 +25,13 @@ export class MembersController extends BaseRoute {
  
     public getAllMembers = async (request: express.Request, response: express.Response) => {
         try {
-            const members = await this.memberRepo.getAllMembers();
-
+            let member: MembersEntity = new MembersEntity();
+            const members = await this.memberRepo.getAllMembers(member);
             response.json({
                 data: members
             });
         } catch (err) {
+            console.log(err);
             response.status(500).json(err);
         }
     }
@@ -52,7 +53,7 @@ export class MembersController extends BaseRoute {
             member.isActive = false;
             const payload = await this.memberRepo.saveMember(member);
 
-            this.service.Email(payload, 'New Member Registration', 
+            this.service.Email(email, 'New Member Registration', 
                 this.service.html('<p style="color: #000">Hello ' + payload.firstName + ' ' + payload.lastName + ', Thank you for registering as a member in our community. <br/><br/>We will get back to you shortly.</p>'));
 
             response.json({
