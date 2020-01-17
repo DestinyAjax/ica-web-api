@@ -7,6 +7,6 @@ validateEnv();
 const app = new App([
         new MembersController()
     ],
-5000);
+    process.env.PORT || 5000);
 
 app.listen();
