@@ -1,9 +1,9 @@
 import * as nodemailer from "nodemailer";
 import {config} from "../utils/app.config";
 
-export default class CoreService {
+export default class BaseService {
 
-    protected  client: any;
+    protected client: any;
 
     constructor() {
         this.client = nodemailer.createTransport({
@@ -37,11 +37,6 @@ export default class CoreService {
 
     public html(data: any): string {
         return  `<div id="content" style="background-color: #1D4BB7width:100%">
-            <nav>
-                <div class="container-fluid">
-                    <span><a href="https://refill-app.herokuapp.com"><img src="https://refillappapi.herokuapp.com/uploads/images/refill_logo.png" style="width: 120px height: 45px padding:10px" class="img-responsive"></a></span>
-                </div>
-            </nav>
             <div style="background-color: #fefefepadding:20pxcolor:#000">${data}</div>
         </div>`;
     }
