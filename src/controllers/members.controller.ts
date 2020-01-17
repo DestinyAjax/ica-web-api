@@ -1,5 +1,4 @@
 import * as express from 'express';
-import { getRepository } from 'typeorm';
 import File from '../utils/file.utility';
 import {BaseRoute} from '../routes/index';
 import {MemberRepo} from "../repository/members.repository";
@@ -50,6 +49,7 @@ export class MembersController extends BaseRoute {
             member.linkedinUrl = linkedinUrl;
             member.githubUrl = githubUrl
             member.imageUrl = await this.file.cloudUpload(`${image}`, "ICA-Yabatech/");
+            member.isActive = false;
             const payload = await this.memberRepo.saveMember(member);
 
             this.service.Email(payload, 'New Member Registration', 

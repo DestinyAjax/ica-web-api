@@ -26,8 +26,9 @@ export default class BaseService {
 
             this.client.sendMail(email, (err: Error, info: any) => {
                 if (err) {
+                    console.log(err)
                 } else {
-                    // Logger.Imp("Message sent: " + info.response);
+                    console.log("Message sent: " + info.response);
                 }
             });
         } catch (error) {

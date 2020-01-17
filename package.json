@@ -4,7 +4,7 @@
   "description": "The official web api for ICA Yabatech",
   "main": "server.ts",
   "scripts": {
-    "dev": "nodemon server.ts",
+    "dev": "nodemon -r dotenv/config server.ts",
     "start": "ts-node -r dotenv/config server.ts"
   },
   "keywords": [
@@ -27,7 +27,8 @@
     "nodemailer": "^6.4.2",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.2.22"
+    "typeorm": "^0.2.22",
+    "url-parse": "^1.4.7"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",

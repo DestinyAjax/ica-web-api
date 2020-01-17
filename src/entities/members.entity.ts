@@ -50,4 +50,7 @@ export class MembersEntity {
         length: 50
     })
     linkedinUrl: string
+
+    @Column()
+    isActive: boolean
 }
