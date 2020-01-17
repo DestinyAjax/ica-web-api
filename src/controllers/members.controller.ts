@@ -48,7 +48,7 @@ export class MembersController extends BaseRoute {
             member.twitterUrl = twitterUrl;
             member.linkedinUrl = linkedinUrl;
             member.githubUrl = githubUrl
-            member.imageUrl = await this.file.cloudUpload(`${image}`, "ICA-Yabatech/");
+            member.imageUrl = this.file.cloudUpload(`${image}`, "ICA-Yabatech/");
             member.isActive = false;
             const payload = await this.memberRepo.saveMember(member);
 
