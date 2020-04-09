@@ -1,13 +1,17 @@
 import * as express from 'express';
 import File from '../utils/file.utility';
-import { BaseRoute } from '../routes/index';
-import { MemberRepo } from "../repository/members.repository";
-import { MembersEntity } from "../entities/members.entity";
 import BaseService from "../services/base.service";
+import { BaseRoute } from '../routes/index';
+import { PlayerRepo } from "../repository/players.repository";
+import { TrackRepo } from "../repository/track.repository"
+import { PlayerEntity } from "../entities/players.entity";
+import { TrackEntity } from "../entities/tracks.entity";
+
 
 export class PlayersController extends BaseRoute {
 
-    private memberRepo: MemberRepo;
+    private playerRepo: PlayerRepo;
+    private trackRepo: TrackRepo;
     private file: any;
     private service: any;
 
@@ -16,20 +20,22 @@ export class PlayersController extends BaseRoute {
         this._intializeRoutes();
         this.file = new File();
         this.service = new BaseService();
-        this.memberRepo = new MemberRepo();
+        this.playerRepo = new PlayerRepo();
+        this.trackRepo = new TrackRepo();
     }
     
     public _intializeRoutes() {
-        this.router.get(`${this.path}/players`, this.getAllPlayers);
-        this.router.post(`${this.path}/players/create`, this.createPlayer);
+        this.router.get(`${this.path}/players`, this.getAll);
+        this.router.post(`${this.path}/players/create`, this.create);
+        this.router.put(`${this.path}/players/update`, this.update);
     }
  
-    public getAllPlayers = async (request: express.Request, response: express.Response) => {
+    public getAll = async (request: express.Request, response: express.Response) => {
         try {
-            let member: MembersEntity = new MembersEntity();
-            const members = await this.memberRepo.getAllMembers(member);
+            let player: PlayerEntity = new PlayerEntity();
+            const players = await this.playerRepo.getAllPlayers(player);
             response.json({
-                data: members
+                data: players
             });
         } catch (err) {
             console.log(err);
@@ -37,45 +43,46 @@ export class PlayersController extends BaseRoute {
         }
     }
  
-    public createPlayer = async (request: express.Request & {files}, response: express.Response) => {
+    public create = async (request: express.Request & {files}, response: express.Response) => {
         try {
-            let member: MembersEntity = new MembersEntity();
-            const {email,firstName,lastName,telephone,role,imageUrl,twitterUrl,linkedinUrl,githubUrl} = request.body;
-            const check = await this.memberRepo.getOneMember(email);
-            if(check !== undefined) {
+            const {email,name,telephone,image_url,twitter_url,track_id,school} = request.body;
+            const check = await this.playerRepo.getSinglePlayer(email);
+
+            if (check !== undefined) {
                 response.status(400).json({
                     message: "This email address already exist",
                     error: true
                 });
             }
             else {
-                const image_url = await this.file.cloudUpload(`${imageUrl}`, "ICA-Yabatech/");
-        
-                member.email = email;
-                member.firstName = firstName;
-                member.lastName = lastName;
-                member.telephone = telephone;
-                member.role = role;
-                member.twitterUrl = twitterUrl;
-                member.linkedinUrl = linkedinUrl;
-                member.githubUrl = githubUrl
-                member.imageUrl = image_url;
-                member.isActive = false;
-                const payload = await this.memberRepo.saveMember(member);
+                const imageUrl = await this.file.cloudUpload(`${image_url}`, "ICA-Challenge/");
+                
+                const player: PlayerEntity = new PlayerEntity();
+                player.email = email;
+                player.name = name;
+                player.telephone = telephone;
+                player.twitter_url = twitter_url;
+                player.school = school;
+                player.image_url = imageUrl;
+                player.is_active = true;
+                await this.playerRepo.createNewPlayer(player);
 
-                this.service.Email(member.email, 'New Member Registration', 
-                   this.service.html('<p style="color: #000">Hello ' + member.firstName + ' ' + member.lastName + ', Thank you for registering as a member in our community. <br/><br/>We will get back to you shortly.</p>'));
+                const track: TrackEntity = await this.trackRepo.single(track_id);
+                track.players = [player];
+                this.trackRepo.update(track_id, track);
 
                 response.json({
-                    message: "Member created successfully",
-                    data: payload,
+                    message: "player created successfully",
+                    data: player,
                     error: false
                 });
             }
         } catch (err) {
-            console.log(err)
             response.status(500).send(err);
-
         }
+    }
+
+    public update = async (request: express.Request, response: express.Response) => {
+
     }
 };

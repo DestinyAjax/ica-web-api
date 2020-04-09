@@ -1,7 +1,9 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany} from "typeorm";
+import {TrackEntity} from "./tracks.entity";
+import { Submission } from './submissions.entity';
 
 @Entity("players")
-export class Player {
+export class PlayerEntity {
 
     @PrimaryGeneratedColumn()
     id: number;
@@ -24,8 +26,11 @@ export class Player {
     @Column({ type: 'varchar' })
     twitter_url: string;
 
-    @Column({ type: 'int' })
-    track_id: number;
+    @ManyToOne(type => TrackEntity, track => track.players)
+    track: TrackEntity;
+
+    @OneToMany(type => Submission, submissions => submissions.player)
+    submissions: Submission[];
 
     @Column({ type: 'boolean' })
     is_active: boolean;

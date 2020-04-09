@@ -14,7 +14,7 @@ export let dbOptions: ConnectionOptions = {
     port: 3306,
     username: process.env.NODE_ENV === "production" ? username : "root",
     password: process.env.NODE_ENV === "production" ? password : "",
-    database: process.env.NODE_ENV === "production" ? database : "ica-yabatech",
+    database: process.env.NODE_ENV === "production" ? database : "ica-web",
     entities: [
         __dirname + '/../**/*.entity{.ts,.js}'
     ],

@@ -1,7 +1,8 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
+import {PlayerEntity} from "./players.entity";
 
 @Entity("tracks")
-export class Track {
+export class TrackEntity {
 
     @PrimaryGeneratedColumn()
     id: number;
@@ -14,5 +15,8 @@ export class Track {
 
     @Column({ type: 'boolean' })
     is_active: boolean;
+
+    @OneToMany(type => PlayerEntity, players => players.track)
+    players: PlayerEntity[];
 
 }
