@@ -48,13 +48,7 @@ export class PlayersController extends BaseRoute {
             const {email,name,telephone,image_url,twitter_url,track_id,school} = request.body;
             const check = await this.playerRepo.getSinglePlayer(email);
 
-            if (check !== undefined) {
-                response.status(400).json({
-                    message: "This email address already exist",
-                    error: true
-                });
-            }
-            else {
+            
                 const imageUrl = await this.file.cloudUpload(`${image_url}`, "ICA-Challenge/");
                 
                 const player: PlayerEntity = new PlayerEntity();
@@ -76,7 +70,7 @@ export class PlayersController extends BaseRoute {
                     data: player,
                     error: false
                 });
-            }
+            
         } catch (err) {
             response.status(500).send(err);
         }
