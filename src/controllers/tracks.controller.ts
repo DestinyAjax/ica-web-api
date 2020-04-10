@@ -35,7 +35,6 @@ export class TrackController extends BaseRoute {
         try {
             const {name,description} = request.body;
             const check = await this.trackRepo.findBy(name);
-            console.log(check);
 
             if (check && check.name === name) {
                 response.status(400).json({

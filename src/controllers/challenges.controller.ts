@@ -35,7 +35,7 @@ export class ChallengeController extends BaseRoute {
             const {title,date} = request.body;
             const check = await this.challengeRepo.single(title);
 
-            if (check !== undefined) {
+            if (check && check.title === title) {
                 response.status(400).json({
                     message: "This challenge already exist",
                     error: true
@@ -46,7 +46,7 @@ export class ChallengeController extends BaseRoute {
                 const challenge: ChallengeEntity = new ChallengeEntity();
                 challenge.title = title;
                 challenge.date = date;
-                challenge.status = true;
+                challenge.status = false;
                 await this.challengeRepo.save(challenge);
 
                 response.json({
