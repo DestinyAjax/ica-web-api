@@ -65,6 +65,7 @@ export class PlayersController extends BaseRoute {
                 player.school = school;
                 player.image_url = imageUrl;
                 player.is_active = true;
+                player.track_id = track_id;
                 await this.playerRepo.create(player);
 
                 const track: TrackEntity = await this.trackRepo.single(track_id);
