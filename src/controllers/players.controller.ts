@@ -56,7 +56,7 @@ export class PlayersController extends BaseRoute {
             }
             else {
                 // const imageUrl = await this.file.cloudUpload(`${image_url}`, "ICA-Challenge/");
-                console.log(image_url)
+                console.log(request)
                 
                 // const player: PlayerEntity = new PlayerEntity();
                 // player.email = email;
