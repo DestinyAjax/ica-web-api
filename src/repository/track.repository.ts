@@ -15,10 +15,8 @@ export class TrackRepo {
         return getManager().getRepository(TrackEntity).findOne(id);
     }
 
-    async findBy(name: string) {
-        const entityManager = getManager();
-        const track = await entityManager.findOne(TrackEntity, {name: name});
-        return track;
+    findBy(name: string) {
+        return getManager().getRepository(TrackEntity).findOne({name: name});
     }
 
     update(id: any, track: TrackEntity) {
