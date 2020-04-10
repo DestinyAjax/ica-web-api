@@ -17,6 +17,15 @@ export class Submission {
     @Column({ type: 'varchar' })
     trophy: string;
 
+    @Column({ type: 'int' })
+    player_id: Number
+
+    @Column({ type: 'int' })
+    challenge_id: Number
+
+    @Column({ type: 'int' })
+    track_id: Number;
+
     @ManyToOne(type => PlayerEntity, player => player.submissions)
     player: PlayerEntity;
 

@@ -26,6 +26,9 @@ export class PlayerEntity {
     @Column({ type: 'varchar' })
     twitter_url: string;
 
+    @Column({ type: 'int' })
+    track_id: Number
+
     @ManyToOne(type => TrackEntity, track => track.players)
     track: TrackEntity;
 

@@ -3,15 +3,15 @@ import { getManager } from "typeorm";
  
 export class PlayerRepo {
  
-    getAllPlayers(player: PlayerEntity) {
+    all(player: PlayerEntity) {
         return getManager().getRepository(PlayerEntity).find(player);
     }
  
-    createNewPlayer(player: PlayerEntity) { 
+    create(player: PlayerEntity) { 
         return getManager().getRepository(PlayerEntity).save(player);
     }
 
-    getSinglePlayer(email: string) {
+    single(email: string) {
         return getManager().getRepository(PlayerEntity).findOne({email: email});
     }
 }

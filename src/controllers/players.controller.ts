@@ -33,7 +33,7 @@ export class PlayersController extends BaseRoute {
     public getAll = async (request: express.Request, response: express.Response) => {
         try {
             let player: PlayerEntity = new PlayerEntity();
-            const players = await this.playerRepo.getAllPlayers(player);
+            const players = await this.playerRepo.all(player);
             response.json({
                 data: players
             });
@@ -46,9 +46,9 @@ export class PlayersController extends BaseRoute {
     public create = async (request: express.Request & {files}, response: express.Response) => {
         try {
             const {email,name,telephone,image_url,twitter_url,track_id,school} = request.body;
-            const check = await this.playerRepo.getSinglePlayer(email);
+            const check = await this.playerRepo.single(email);
 
-            if (check !== undefined) {
+            if (check && check.email === email) {
                 response.status(400).json({
                     message: "This email address already exist",
                     error: true
@@ -65,7 +65,7 @@ export class PlayersController extends BaseRoute {
                 player.school = school;
                 player.image_url = imageUrl;
                 player.is_active = true;
-                await this.playerRepo.createNewPlayer(player);
+                await this.playerRepo.create(player);
 
                 const track: TrackEntity = await this.trackRepo.single(track_id);
                 track.players = [player];
