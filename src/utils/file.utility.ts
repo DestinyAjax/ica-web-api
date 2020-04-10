@@ -25,7 +25,7 @@ export default class File {
         if (typeof file !== "undefined" || file !== "" || file !== null) {
             return new Promise<any>((resolve, reject) => {
                 cloudinary.v2.uploader.upload(file, {folder: dir}, (error, result) => {
-                    if (result && result.url) resolve(result.url);
+                    resolve(result.url);
                     reject(error);
                 });
             });
