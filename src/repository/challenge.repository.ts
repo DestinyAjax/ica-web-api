@@ -11,8 +11,12 @@ export class ChallengeRepo {
         return getManager().getRepository(ChallengeEntity).save(challenge);
     }
 
-    single(id: any) {
+    byId(id: any) {
         return getManager().getRepository(ChallengeEntity).findOne(id);
+    }
+
+    single(title: string) {
+        return getManager().getRepository(ChallengeEntity).findOne({title: title});
     }
 
     update(id: any, challenge: ChallengeEntity) {
