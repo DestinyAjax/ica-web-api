@@ -55,27 +55,28 @@ export class PlayersController extends BaseRoute {
                 });
             }
             else {
-                const imageUrl = await this.file.cloudUpload(`${image_url}`, "ICA-Challenge/");
+                // const imageUrl = await this.file.cloudUpload(`${image_url}`, "ICA-Challenge/");
+                console.log(image_url)
                 
-                const player: PlayerEntity = new PlayerEntity();
-                player.email = email;
-                player.name = name;
-                player.telephone = telephone;
-                player.twitter_url = twitter_url;
-                player.school = school;
-                player.image_url = imageUrl;
-                player.is_active = true;
-                await this.playerRepo.createNewPlayer(player);
+                // const player: PlayerEntity = new PlayerEntity();
+                // player.email = email;
+                // player.name = name;
+                // player.telephone = telephone;
+                // player.twitter_url = twitter_url;
+                // player.school = school;
+                // player.image_url = imageUrl;
+                // player.is_active = true;
+                // await this.playerRepo.createNewPlayer(player);
 
-                const track: TrackEntity = await this.trackRepo.single(track_id);
-                track.players = [player];
-                this.trackRepo.update(track_id, track);
+                // const track: TrackEntity = await this.trackRepo.single(track_id);
+                // track.players = [player];
+                // this.trackRepo.update(track_id, track);
 
-                response.json({
-                    message: "player created successfully",
-                    data: player,
-                    error: false
-                });
+                // response.json({
+                //     message: "player created successfully",
+                //     data: player,
+                //     error: false
+                // });
             }
         } catch (err) {
             response.status(500).send(err);
