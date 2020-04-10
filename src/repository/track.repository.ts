@@ -16,7 +16,7 @@ export class TrackRepo {
     }
 
     findBy(name: string) {
-        return getManager().getRepository(TrackEntity).findOne({name: name});
+        return getManager().getRepository(TrackEntity).findOne({where: {name: name}});
     }
 
     update(id: any, track: TrackEntity) {
