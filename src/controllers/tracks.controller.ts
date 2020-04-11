@@ -1,21 +1,26 @@
 import * as express from 'express';
 import { BaseRoute } from '../routes/index';
 import { TrackRepo } from "../repository/track.repository";
+import { PlayerRepo } from "../repository/players.repository";
 import { TrackEntity } from "../entities/tracks.entity";
+import { PlayerEntity } from "../entities/players.entity";
 
 export class TrackController extends BaseRoute {
 
     private trackRepo: TrackRepo;
+    private playerRepo: PlayerRepo;
 
     constructor() {
         super();
         this._intializeRoutes();
         this.trackRepo = new TrackRepo();
+        this.playerRepo = new PlayerRepo();
     }
     
     public _intializeRoutes() {
         this.router.get(`${this.path}/tracks`, this.getAll);
         this.router.post(`${this.path}/tracks/create`, this.create);
+        this.router.get(`${this.path}/track/:track_id/players`, this.getAllPlayers);
     }
  
     public getAll = async (request: express.Request, response: express.Response) => {
@@ -57,6 +62,20 @@ export class TrackController extends BaseRoute {
                 });
             }
         } catch (err) {
+            response.status(500).send(err);
+        }
+    }
+
+    public getAllPlayers = async (request: express.Request, response: express.Response) => {
+        try {
+            const track_id: any = request.params.track_id;
+            const players = await this.playerRepo.single(track_id, 'track_id');
+
+            response.json({
+                data: players
+            });
+        }
+        catch (err) {
             response.status(500).send(err);
         }
     }

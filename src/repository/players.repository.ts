@@ -11,7 +11,11 @@ export class PlayerRepo {
         return getManager().getRepository(PlayerEntity).save(player);
     }
 
-    single(email: string) {
-        return getManager().getRepository(PlayerEntity).findOne({email: email});
+    single(data: any, type: string) {
+        return getManager().getRepository(PlayerEntity).findOne({[type]: data});
+    }
+
+    byId(player_id: any) {
+        return getManager().getRepository(PlayerEntity).findOne(player_id);
     }
 }

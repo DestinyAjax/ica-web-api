@@ -27,7 +27,8 @@ export class PlayersController extends BaseRoute {
     public _intializeRoutes() {
         this.router.get(`${this.path}/players`, this.getAll);
         this.router.post(`${this.path}/players/create`, this.create);
-        this.router.put(`${this.path}/players/update`, this.update);
+        this.router.put(`${this.path}/player/:player_id/update`, this.update);
+        this.router.get(`${this.path}/player/:player_id`, this.viewPlayer);
     }
  
     public getAll = async (request: express.Request, response: express.Response) => {
@@ -46,7 +47,7 @@ export class PlayersController extends BaseRoute {
     public create = async (request: express.Request & {files}, response: express.Response) => {
         try {
             const {email,name,telephone,image_url,twitter_url,track_id,school} = request.body;
-            const check = await this.playerRepo.single(email);
+            const check = await this.playerRepo.single(email, 'email');
 
             if (check && check.email === email) {
                 response.status(400).json({
@@ -85,5 +86,19 @@ export class PlayersController extends BaseRoute {
 
     public update = async (request: express.Request, response: express.Response) => {
 
+    }
+
+    public viewPlayer = async (request: express.Request, response: express.Response) => {
+        try {
+            const player_id: any = request.params.player_id;
+            const player = await this.playerRepo.byId(player_id);
+
+            response.json({
+                data: player
+            });
+        }
+        catch (err) {
+            response.status(500).send(err);
+        }
     }
 };
