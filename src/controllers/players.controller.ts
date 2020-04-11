@@ -85,7 +85,27 @@ export class PlayersController extends BaseRoute {
     }
 
     public update = async (request: express.Request, response: express.Response) => {
+        try {
+            const player_id: any = request.params.player_id;
+            const {email,name,telephone,twitter_url,school} = request.body; 
+            const player = await this.playerRepo.byId(player_id);
 
+            player.email = email;
+            player.name = name;
+            player.twitter_url = twitter_url;
+            player.school = school;
+            player.telephone = telephone;
+            await this.playerRepo.create(player);
+
+            response.send({
+                message: "Player Updated successfully",
+                data: player,
+                error: false
+            });
+        }
+        catch (err) {
+            response.status(500).send(err);
+        }
     }
 
     public viewPlayer = async (request: express.Request, response: express.Response) => {

@@ -1,59 +1,76 @@
 import * as express from 'express';
 import { BaseRoute } from '../routes/index';
-import { TrackRepo } from "../repository/track.repository";
-import { TrackEntity } from "../entities/tracks.entity";
+import { SubmissionRepo } from "../repository/submission.repository";
+import { PlayerRepo } from "../repository/players.repository";
+import { ChallengeRepo } from "../repository/challenge.repository";
+import { SubmissionEntity } from "../entities/submissions.entity";
+import { getManager } from "typeorm";
 
 export class SubmissionController extends BaseRoute {
 
-    private trackRepo: TrackRepo;
+    private submissionRepo: SubmissionRepo;
+    private playerRepo: PlayerRepo;
+    private challengeRepo: ChallengeRepo;
 
     constructor() {
         super();
         this._intializeRoutes();
-        this.trackRepo = new TrackRepo();
+        this.submissionRepo = new SubmissionRepo();
+        this.playerRepo = new PlayerRepo();
+        this.challengeRepo = new ChallengeRepo();
     }
     
     public _intializeRoutes() {
-        this.router.get(`${this.path}/tracks`, this.getAll);
-        this.router.post(`${this.path}/tracks/create`, this.create);
+        this.router.get(`${this.path}/submissions`, this.getAll);
+        this.router.post(`${this.path}/submission/create`, this.create);
     }
  
     public getAll = async (request: express.Request, response: express.Response) => {
         try {
-            let track: TrackEntity = new TrackEntity();
-            const tracks = await this.trackRepo.all(track);
+            let submission: SubmissionEntity = new SubmissionEntity();
+            const submissions = await this.submissionRepo.all(submission);
+
+            if (submissions === undefined) {
+                response.json({
+                    data: []
+                });
+                return;
+            }
+
             response.json({
-                data: tracks
+                data: submissions
             });
         } catch (err) {
-            console.log(err);
             response.status(500).json(err);
         }
     }
  
     public create = async (request: express.Request, response: express.Response) => {
         try {
-            const {name,description} = request.body;
-            const check = await this.trackRepo.findBy(name);
-            console.log(check);
+            const {email,submission_link} = request.body;
+            const player = await this.playerRepo.single(email, 'email');
+            const active_challenge = await this.challengeRepo.single(true, 'status');
+            const check = await getManager().getRepository(SubmissionEntity).findOne({ where:{player_id: player.id, challenge_id: active_challenge.id}});
 
-            if (check && check.name === name) {
+            if (check && check.submission_link) {
                 response.status(400).json({
-                    message: "This track name already exist",
+                    message: "Submission has already been submitted",
                     error: true
                 });
             }
             else {
                 
-                const track: TrackEntity = new TrackEntity();
-                track.name = name;
-                track.description = description;
-                track.is_active = true;
-                await this.trackRepo.save(track);
+                const submission: SubmissionEntity = new SubmissionEntity();
+                submission.player_name = player.name;
+                submission.submission_link = submission_link;
+                submission.challenge_id = active_challenge.id;
+                submission.track_id = player.track_id;
+                submission.is_active = false;
+                await this.submissionRepo.save(submission);
 
                 response.json({
-                    message: "Track created successfully",
-                    data: track,
+                    message: "Submission created successfully",
+                    data: submission,
                     error: false
                 });
             }

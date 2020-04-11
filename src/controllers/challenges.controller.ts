@@ -22,6 +22,7 @@ export class ChallengeController extends BaseRoute {
         try {
             let challenge: ChallengeEntity = new ChallengeEntity();
             const challenges = await this.challengeRepo.all(challenge);
+            
             response.json({
                 data: challenges
             });
@@ -33,7 +34,7 @@ export class ChallengeController extends BaseRoute {
     public create = async (request: express.Request, response: express.Response) => {
         try {
             const {title,date} = request.body;
-            const check = await this.challengeRepo.single(title);
+            const check = await this.challengeRepo.single(title, 'title');
 
             if (check && check.title === title) {
                 response.status(400).json({

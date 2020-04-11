@@ -15,8 +15,8 @@ export class ChallengeRepo {
         return getManager().getRepository(ChallengeEntity).findOne(id);
     }
 
-    single(title: string) {
-        return getManager().getRepository(ChallengeEntity).findOne({title: title});
+    single(data: any, type: string) {
+        return getManager().getRepository(ChallengeEntity).findOne({[type]: data});
     }
 
     update(id: any, challenge: ChallengeEntity) {

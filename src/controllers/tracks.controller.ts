@@ -32,7 +32,6 @@ export class TrackController extends BaseRoute {
                 data: tracks
             });
         } catch (err) {
-            console.log(err);
             response.status(500).json(err);
         }
     }

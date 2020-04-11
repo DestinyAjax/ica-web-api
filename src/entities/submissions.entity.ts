@@ -3,13 +3,16 @@ import { PlayerEntity } from './players.entity';
 import { ChallengeEntity } from './challenges.entity';
 
 @Entity("submissions")
-export class Submission {
+export class SubmissionEntity {
 
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({ type: 'double'})
-    score: Double
+    score: Double;
+
+    @Column({ type: 'varchar'})
+    player_name: string;
 
     @Column({ type: 'varchar' })
     submission_link: string
