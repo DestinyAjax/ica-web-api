@@ -27,6 +27,7 @@ export class TrackController extends BaseRoute {
         try {
             let track: TrackEntity = new TrackEntity();
             const tracks = await this.trackRepo.all(track);
+
             response.json({
                 data: tracks
             });
@@ -70,7 +71,7 @@ export class TrackController extends BaseRoute {
         try {
             const track_id: any = request.params.track_id;
             const players = await this.playerRepo.single(track_id, 'track_id');
-
+            console.log(players);
             response.json({
                 data: players
             });
