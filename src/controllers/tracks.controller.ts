@@ -72,7 +72,7 @@ export class TrackController extends BaseRoute {
             const track_id: any = request.params.track_id;
             const players = await this.playerRepo.single(track_id, 'track_id');
 
-            if (typeof players === undefined) {
+            if (players === undefined) {
                 response.json({
                     data: []
                 });
