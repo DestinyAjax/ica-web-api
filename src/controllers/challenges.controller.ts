@@ -2,6 +2,7 @@ import * as express from 'express';
 import { BaseRoute } from '../routes/index';
 import { ChallengeRepo } from "../repository/challenge.repository";
 import { ChallengeEntity } from "../entities/challenges.entity";
+import { timingSafeEqual } from 'crypto';
 
 export class ChallengeController extends BaseRoute {
 
@@ -18,6 +19,7 @@ export class ChallengeController extends BaseRoute {
         this.router.post(`${this.path}/challenge/create`, this.create);
         this.router.delete(`${this.path}/challenge/:challenge_id`, this.deleteOne);
         this.router.put(`${this.path}/challenge/:challenge_id`, this.update);
+        this.router.get(`${this.path}/challenge/:challenge_id`, this.view);
     }
  
     public getAll = async (request: express.Request, response: express.Response) => {
@@ -81,6 +83,13 @@ export class ChallengeController extends BaseRoute {
         try {
             const {title,date,status} = request.body;
             const challenge_id = request.params.challenge_id;
+
+            if (status === true) {
+                const deactivate = await this.challengeRepo.single(true, 'status');
+                deactivate.status = false;
+                await this.challengeRepo.update(challenge_id, deactivate);
+            }
+
             const challenge = await this.challengeRepo.byId(challenge_id);
             challenge.title = title;
             challenge.date = date;
@@ -89,6 +98,20 @@ export class ChallengeController extends BaseRoute {
 
             response.json({
                 message: "Updated successfully",
+                data: challenge
+            });
+        }
+        catch (err) {
+            response.status(500).send(err);
+        }
+    }
+
+    public view = async (request: express.Request, response: express.Response) => {
+        try {
+            const challenge_id = request.params.challenge_id;
+            const challenge = await this.challengeRepo.byId(challenge_id);
+            
+            response.json({
                 data: challenge
             });
         }
