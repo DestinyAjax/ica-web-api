@@ -15,6 +15,10 @@ export class PlayerRepo {
         return getManager().getRepository(PlayerEntity).findOne({[type]: data});
     }
 
+    many(data: any, type: string) {
+        return getManager().getRepository(PlayerEntity).find({[type]: data});
+    }
+
     byId(player_id: any) {
         return getManager().getRepository(PlayerEntity).findOne(player_id);
     }

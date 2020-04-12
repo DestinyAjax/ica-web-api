@@ -72,7 +72,7 @@ export class TrackController extends BaseRoute {
     public getAllPlayers = async (request: express.Request, response: express.Response) => {
         try {
             const track_id: any = request.params.track_id;
-            const players = await this.playerRepo.single(track_id, 'track_id');
+            const players = await this.playerRepo.many(track_id, 'track_id');
 
             if (players === undefined) {
                 response.json({
