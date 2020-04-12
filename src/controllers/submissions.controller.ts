@@ -50,6 +50,14 @@ export class SubmissionController extends BaseRoute {
             const {email,submission_link} = request.body;
             const player = await this.playerRepo.single(email, 'email');
             const active_challenge = await this.challengeRepo.single(true, 'status');
+
+            if (player === undefined) {
+                response.status(400).json({
+                    message: "This email does not exist in our records",
+                    error: true
+                });
+            }
+
             const check = await getManager().getRepository(SubmissionEntity).findOne({ where:{player_id: player.id, challenge_id: active_challenge.id}});
 
             if (check && check.submission_link) {
