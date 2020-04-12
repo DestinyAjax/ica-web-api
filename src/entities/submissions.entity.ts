@@ -20,6 +20,9 @@ export class SubmissionEntity {
     @Column({ type: 'varchar' })
     trophy: string;
 
+    @Column({ type: 'varchar' })
+    image_url: string;
+
     @Column({ type: 'int' })
     player_id: Number
 

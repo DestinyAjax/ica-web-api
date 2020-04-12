@@ -75,6 +75,7 @@ export class SubmissionController extends BaseRoute {
                 submission.submission_link = submission_link;
                 submission.challenge_id = active_challenge.id;
                 submission.track_id = player.track_id;
+                submission.image_url = player.image_url;
                 submission.player_id = player.id;
                 submission.is_active = false;
                 await this.submissionRepo.save(submission);
