@@ -59,6 +59,7 @@ export class SubmissionController extends BaseRoute {
             }
 
             const check = await getManager().getRepository(SubmissionEntity).find({ where: { player_id: player.id, challenge_id: active_challenge.id}});
+            console.log(check);
 
             if (check.length > 0) {
                 response.status(400).json({
