@@ -58,7 +58,8 @@ export class SubmissionController extends BaseRoute {
                 });
             }
 
-            const check = await getManager().getRepository(SubmissionEntity).find({ where: { player_id: player.id, challenge_id: active_challenge.id}});
+            const check = await getManager().getRepository(SubmissionEntity)
+                .find({ where: { player_id: player.id, challenge_id: active_challenge.id}});
             console.log(check);
 
             if (check.length > 0) {
@@ -74,6 +75,7 @@ export class SubmissionController extends BaseRoute {
                 submission.submission_link = submission_link;
                 submission.challenge_id = active_challenge.id;
                 submission.track_id = player.track_id;
+                submission.player_id = player.id;
                 submission.is_active = false;
                 await this.submissionRepo.save(submission);
 
