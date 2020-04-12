@@ -58,7 +58,7 @@ export class SubmissionController extends BaseRoute {
                 });
             }
 
-            const check = await getManager().getRepository(SubmissionEntity).findOne({ where:{player_id: player.id, challenge_id: active_challenge.id}});
+            const check = await getManager().getRepository(SubmissionEntity).findOne({ player_id: player.id, challenge_id: active_challenge.id});
 
             if (check && check.submission_link) {
                 response.status(400).json({
