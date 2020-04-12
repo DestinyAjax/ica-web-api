@@ -22,4 +22,8 @@ export class SubmissionRepo {
     update(id: any, submission: SubmissionEntity) {
         return getManager().getRepository(SubmissionEntity).update(id, submission);
     }
+
+    deleteOne(submission_id: any) {
+        return getManager().getRepository(SubmissionEntity).delete(submission_id);
+    }
 }

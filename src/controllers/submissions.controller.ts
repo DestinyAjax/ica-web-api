@@ -23,6 +23,7 @@ export class SubmissionController extends BaseRoute {
     public _intializeRoutes() {
         this.router.get(`${this.path}/submissions`, this.getAll);
         this.router.post(`${this.path}/submission/create`, this.create);
+        this.router.put(`${this.path}/submission/:submission_id`, this.update);
     }
  
     public getAll = async (request: express.Request, response: express.Response) => {
@@ -60,11 +61,10 @@ export class SubmissionController extends BaseRoute {
 
             const check = await getManager().getRepository(SubmissionEntity)
                 .find({ where: { player_id: player.id, challenge_id: active_challenge.id}});
-            console.log(check);
 
             if (check.length > 0) {
                 response.status(400).json({
-                    message: "Submission has already been submitted",
+                    message: "Submission has already been collected for this user",
                     error: true
                 });
             }
@@ -88,5 +88,29 @@ export class SubmissionController extends BaseRoute {
         } catch (err) {
             response.status(500).send(err);
         }
+    }
+
+    public update = async (request: express.Request, response: express.Response) => {
+        try {
+            const {score,trophy} = request.body;
+            const submission_id = request.params.submission_id;
+            const submission = await this.submissionRepo.byId(submission_id);
+            submission.score = parseFloat(score);
+            submission.trophy = trophy === '' ? submission.trophy : trophy;
+            await this.submissionRepo.update(submission_id, submission);
+
+            response.json({
+                message: "Updated successfully",
+                data: submission
+            });
+        }
+        catch (err) {
+            response.status(500).send(err);
+        }
+    }
+
+    public deleteAll = async (request: express.Request, response: express.Response) => {
+        try {}
+        catch (err) {}
     }
 };

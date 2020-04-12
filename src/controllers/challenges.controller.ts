@@ -16,6 +16,8 @@ export class ChallengeController extends BaseRoute {
     public _intializeRoutes() {
         this.router.get(`${this.path}/challenges`, this.getAll);
         this.router.post(`${this.path}/challenge/create`, this.create);
+        this.router.delete(`${this.path}/challenge/:challenge_id`, this.deleteOne);
+        this.router.put(`${this.path}/challenge/:challenge_id`, this.update);
     }
  
     public getAll = async (request: express.Request, response: express.Response) => {
@@ -57,6 +59,40 @@ export class ChallengeController extends BaseRoute {
                 });
             }
         } catch (err) {
+            response.status(500).send(err);
+        }
+    }
+
+    public deleteOne = async (request: express.Request, response: express.Response) => {
+        try {
+            const challenge_id = request.params.challenge_id;
+            await this.challengeRepo.deleteOne(challenge_id);
+
+            response.json({
+                message: "Deleted successfully"
+            });
+        }
+        catch (err) {
+            response.status(500).send(err);
+        }
+    }
+
+    public update = async (request: express.Request, response: express.Response) => {
+        try {
+            const {title,date,status} = request.body;
+            const challenge_id = request.params.submission_id;
+            const challenge = await this.challengeRepo.byId(challenge_id);
+            challenge.title = title;
+            challenge.date = date;
+            challenge.status = status;
+            await this.challengeRepo.update(challenge_id, challenge);
+
+            response.json({
+                message: "Updated successfully",
+                data: challenge
+            });
+        }
+        catch (err) {
             response.status(500).send(err);
         }
     }

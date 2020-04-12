@@ -22,4 +22,12 @@ export class ChallengeRepo {
     update(id: any, challenge: ChallengeEntity) {
         return getManager().getRepository(ChallengeEntity).update(id, challenge);
     }
+
+    deleteOne(challenge_id: any) {
+        return getManager().getRepository(ChallengeEntity).delete(challenge_id);
+    }
+
+    deleteAll(data: any, type: string) {
+        return getManager().getRepository(ChallengeEntity).delete({[type]: data});
+    }
 }
