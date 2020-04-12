@@ -86,8 +86,10 @@ export class ChallengeController extends BaseRoute {
 
             if (status === true) {
                 const deactivate = await this.challengeRepo.single(true, 'status');
-                deactivate.status = false;
-                await this.challengeRepo.update(challenge_id, deactivate);
+                if (deactivate !== undefined) {
+                    deactivate.status = false;
+                    await this.challengeRepo.update(challenge_id, deactivate);
+                }
             }
 
             const challenge = await this.challengeRepo.byId(challenge_id);
