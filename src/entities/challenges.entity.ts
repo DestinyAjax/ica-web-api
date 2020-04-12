@@ -1,5 +1,5 @@
 import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
-import { Submission } from './submissions.entity';
+import { SubmissionEntity } from './submissions.entity';
 
 @Entity("challenges")
 export class ChallengeEntity {
@@ -16,7 +16,7 @@ export class ChallengeEntity {
     @Column({ type: 'boolean' })
     status: boolean;
  
-    @OneToMany(type => Submission, submissions => submissions.challenge)
-    submissions: Submission[];
+    @OneToMany(type => SubmissionEntity, submissions => submissions.challenge)
+    submissions: SubmissionEntity[];
 
 }

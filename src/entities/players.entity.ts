@@ -1,6 +1,6 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany} from "typeorm";
 import {TrackEntity} from "./tracks.entity";
-import { Submission } from './submissions.entity';
+import { SubmissionEntity } from './submissions.entity';
 
 @Entity("players")
 export class PlayerEntity {
@@ -32,10 +32,9 @@ export class PlayerEntity {
     @ManyToOne(type => TrackEntity, track => track.players)
     track: TrackEntity;
 
-    @OneToMany(type => Submission, submissions => submissions.player)
-    submissions: Submission[];
+    @OneToMany(type => SubmissionEntity, submissions => submissions.player)
+    submissions: SubmissionEntity[];
 
     @Column({ type: 'boolean' })
     is_active: boolean;
-
 }
