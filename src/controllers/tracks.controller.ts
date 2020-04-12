@@ -93,7 +93,7 @@ export class TrackController extends BaseRoute {
     public getAllSubmissions = async (request: express.Request, response: express.Response) => {
         try {
             const track_id: any = request.params.track_id;
-            const submissions = await this.submissionRepo.single(track_id, 'track_id');
+            const submissions = await this.submissionRepo.many(track_id, 'track_id');
 
             if (submissions === undefined) {
                 response.json({

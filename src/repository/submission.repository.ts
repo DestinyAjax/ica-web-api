@@ -15,6 +15,10 @@ export class SubmissionRepo {
         return getManager().getRepository(SubmissionEntity).findOne({[type]: data});
     }
 
+    many(data: any, type: string) {
+        return getManager().getRepository(SubmissionEntity).find({[type]: data});
+    }
+
     byId(submission_id: any) {
         return getManager().getRepository(SubmissionEntity).findOne(submission_id);
     }
