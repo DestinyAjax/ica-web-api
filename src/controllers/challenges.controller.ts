@@ -80,7 +80,7 @@ export class ChallengeController extends BaseRoute {
     public update = async (request: express.Request, response: express.Response) => {
         try {
             const {title,date,status} = request.body;
-            const challenge_id = request.params.submission_id;
+            const challenge_id = request.params.challenge_id;
             const challenge = await this.challengeRepo.byId(challenge_id);
             challenge.title = title;
             challenge.date = date;

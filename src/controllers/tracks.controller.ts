@@ -2,25 +2,28 @@ import * as express from 'express';
 import { BaseRoute } from '../routes/index';
 import { TrackRepo } from "../repository/track.repository";
 import { PlayerRepo } from "../repository/players.repository";
+import { SubmissionRepo } from "../repository/submission.repository";
 import { TrackEntity } from "../entities/tracks.entity";
-import { PlayerEntity } from "../entities/players.entity";
 
 export class TrackController extends BaseRoute {
 
     private trackRepo: TrackRepo;
     private playerRepo: PlayerRepo;
+    private submissionRepo: SubmissionRepo;
 
     constructor() {
         super();
         this._intializeRoutes();
         this.trackRepo = new TrackRepo();
         this.playerRepo = new PlayerRepo();
+        this.submissionRepo = new SubmissionRepo();
     }
     
     public _intializeRoutes() {
         this.router.get(`${this.path}/tracks`, this.getAll);
         this.router.post(`${this.path}/tracks/create`, this.create);
         this.router.get(`${this.path}/track/:track_id/players`, this.getAllPlayers);
+        this.router.get(`${this.path}/track/:track_id/submissions`, this.getAllSubmissions);
     }
  
     public getAll = async (request: express.Request, response: express.Response) => {
@@ -80,6 +83,27 @@ export class TrackController extends BaseRoute {
 
             response.json({
                 data: players
+            });
+        }
+        catch (err) {
+            response.status(500).send(err);
+        }
+    }
+
+    public getAllSubmissions = async (request: express.Request, response: express.Response) => {
+        try {
+            const track_id: any = request.params.track_id;
+            const submissions = await this.submissionRepo.single(track_id, 'track_id');
+
+            if (submissions === undefined) {
+                response.json({
+                    data: []
+                });
+                return;
+            }
+
+            response.json({
+                data: submissions
             });
         }
         catch (err) {
