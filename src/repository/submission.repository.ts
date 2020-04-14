@@ -4,7 +4,9 @@ import { getManager, getRepository } from "typeorm";
 export class SubmissionRepo {
  
     all(submission: SubmissionEntity) {
-        return getRepository(SubmissionEntity).createQueryBuilder('submission').getMany();
+        return getRepository(SubmissionEntity).createQueryBuilder('submission')
+            .orderBy("submission.score", "DESC")
+            .getMany();
     }
  
     save(submission: SubmissionEntity) { 
