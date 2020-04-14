@@ -18,7 +18,11 @@ export class SubmissionRepo {
     }
 
     many(data: any, type: string) {
-        return getManager().getRepository(SubmissionEntity).find({[type]: data});
+        return getRepository(SubmissionEntity)
+        .createQueryBuilder("submission")
+        .where({[type]: data})
+        .orderBy("submission.score", "DESC")
+        .getMany();
     }
 
     byId(submission_id: any) {

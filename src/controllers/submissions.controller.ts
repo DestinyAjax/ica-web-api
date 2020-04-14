@@ -25,6 +25,7 @@ export class SubmissionController extends BaseRoute {
         this.router.post(`${this.path}/submission/create`, this.create);
         this.router.put(`${this.path}/submission/:submission_id`, this.update);
         this.router.get(`${this.path}/submission/:submission_id`, this.view);
+        this.router.get(`${this.path}/submissions/track/:track_id`, this.getByTrack);
     }
  
     public getAll = async (request: express.Request, response: express.Response) => {
@@ -123,6 +124,20 @@ export class SubmissionController extends BaseRoute {
 
             response.json({
                 data: submission
+            });
+        }
+        catch (err) {
+            response.status(500).send(err);
+        }
+    }
+    
+    public getByTrack = async (request: express.Request, response: express.Response) => {
+        try {
+            const track_id = request.params.track_id;
+            const submissions = await this.submissionRepo.many(track_id, 'track_id');
+
+            response.json({
+                data: submissions
             });
         }
         catch (err) {
