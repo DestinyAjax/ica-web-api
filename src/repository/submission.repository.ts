@@ -1,10 +1,10 @@
 import { SubmissionEntity } from "../entities/submissions.entity";
-import { getManager } from "typeorm";
+import { getManager, getRepository } from "typeorm";
  
 export class SubmissionRepo {
  
     all(submission: SubmissionEntity) {
-        return getManager().getRepository(SubmissionEntity).find(submission);
+        return getRepository(SubmissionEntity).createQueryBuilder('submission').getMany();
     }
  
     save(submission: SubmissionEntity) { 
