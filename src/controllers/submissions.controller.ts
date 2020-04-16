@@ -26,6 +26,7 @@ export class SubmissionController extends BaseRoute {
         this.router.put(`${this.path}/submission/:submission_id`, this.update);
         this.router.get(`${this.path}/submission/:submission_id`, this.view);
         this.router.get(`${this.path}/submissions/track/:track_id`, this.getByTrack);
+        this.router.delete(`${this.path}/submission/:submission_id`, this.deleteOne);
     }
  
     public getAll = async (request: express.Request, response: express.Response) => {
@@ -138,6 +139,20 @@ export class SubmissionController extends BaseRoute {
 
             response.json({
                 data: submissions
+            });
+        }
+        catch (err) {
+            response.status(500).send(err);
+        }
+    }
+
+    public deleteOne = async (request: express.Request, response: express.Response) => {
+        try {
+            const submission_id = request.params.submission_id;
+            await this.submissionRepo.deleteOne(submission_id);
+
+            response.json({
+                message: "Deleted successfully"
             });
         }
         catch (err) {
