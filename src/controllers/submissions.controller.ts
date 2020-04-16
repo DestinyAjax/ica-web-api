@@ -55,6 +55,13 @@ export class SubmissionController extends BaseRoute {
             const player = await this.playerRepo.single(email, 'email');
             const active_challenge = await this.challengeRepo.single(true, 'status');
 
+            if (active_challenge === undefined) {
+                response.status(401).json({
+                    message: 'Challenge day is closed',
+                    error: true
+                });
+            }
+
             if (player === undefined) {
                 response.status(400).json({
                     message: "This email does not exist in our records",
@@ -96,11 +103,12 @@ export class SubmissionController extends BaseRoute {
 
     public update = async (request: express.Request, response: express.Response) => {
         try {
-            const {score,trophy} = request.body;
+            const {score,trophy,submission_link} = request.body;
             const submission_id = request.params.submission_id;
             const submission = await this.submissionRepo.byId(submission_id);
             submission.score = parseFloat(score);
             submission.trophy = trophy === '' ? submission.trophy : trophy;
+            submission.submission_link = submission_link;
             await this.submissionRepo.update(submission_id, submission);
 
             response.json({
