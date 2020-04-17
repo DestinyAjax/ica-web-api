@@ -7,6 +7,7 @@ import { TrackEntity } from "../entities/tracks.entity";
 import { ChallengeRepo } from '../repository/challenge.repository';
 import { getRepository } from "typeorm";
 import { ChallengeEntity } from '../entities/challenges.entity';
+import { SubmissionEntity } from '../entities/submissions.entity';
 
 export class TrackController extends BaseRoute {
 
@@ -125,7 +126,7 @@ export class TrackController extends BaseRoute {
             const format = date.toLocaleDateString().split('/');
             const data = `${format[2]}-${parseInt(format[0]) <= 10 ? `0${format[0]}` : format[0]}-${format[1]}`;
             const active_challenge = await this.challengeRepo.single(data, 'date');
-            const challenges = await getRepository(ChallengeEntity)
+            const challenges = await getRepository(SubmissionEntity)
                 .createQueryBuilder("submission")
                 .where({ track_id: track_id, challenge_id: active_challenge.id})
                 .orderBy("submission.score", "DESC")
