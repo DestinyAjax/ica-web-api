@@ -125,7 +125,7 @@ export class ChallengeController extends BaseRoute {
 
     public getActive = async (request: express.Request, response: express.Response) => {
         try {
-            const challenge = await this.challengeRepo.single('true', 'status');
+            const challenge = await this.challengeRepo.single(true, 'status');
             response.json({
                 data: challenge
             });
