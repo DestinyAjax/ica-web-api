@@ -19,6 +19,10 @@ export class ChallengeRepo {
         return getManager().getRepository(ChallengeEntity).findOne({[type]: data});
     }
 
+    findMany(data: any, type: string) {
+        return getManager().getRepository(ChallengeEntity).find({[type]: data});
+    }
+
     update(id: any, challenge: ChallengeEntity) {
         return getManager().getRepository(ChallengeEntity).update(id, challenge);
     }
