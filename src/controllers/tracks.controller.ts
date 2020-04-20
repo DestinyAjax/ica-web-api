@@ -125,15 +125,14 @@ export class TrackController extends BaseRoute {
             const date = new Date();
             const format = date.toLocaleDateString().split('/');
             const data = `${format[2]}-${parseInt(format[0]) <= 10 ? `0${format[0]}` : format[0]}-${format[1]}`;
-            const active_challenge = await this.challengeRepo.single(data, 'date');
-            console.log(data);
+            const active_challenge = await this.challengeRepo.single('2020-04-19', 'date');
+            
             const challenges = await getRepository(SubmissionEntity)
                 .createQueryBuilder("submission")
                 .where({ track_id: track_id, challenge_id: active_challenge.id})
                 .orderBy("submission.score", "DESC")
                 .getMany();
             
-                console.log(challenges);
             if (challenges === undefined) {
                 response.json({
                     data: []
