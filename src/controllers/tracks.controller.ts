@@ -141,7 +141,8 @@ export class TrackController extends BaseRoute {
             }
 
             response.json({
-                data: challenges
+                data: challenges,
+                challenge: active_challenge
             });
         }
         catch (err) {
