@@ -125,7 +125,10 @@ export class ChallengeController extends BaseRoute {
 
     public getActive = async (request: express.Request, response: express.Response) => {
         try {
-            const challenge = await this.challengeRepo.single(true, 'status');
+            const date = new Date();
+            const format = date.toLocaleDateString().split('/');
+            const data = `${format[2]}-${parseInt(format[0]) <= 10 ? `0${format[0]}` : format[0]}-${format[1]}`;
+            const challenge = await this.challengeRepo.single(data, 'date');
             console.log(challenge)
             response.json({
                 data: challenge
