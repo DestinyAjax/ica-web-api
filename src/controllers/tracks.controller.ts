@@ -31,6 +31,7 @@ export class TrackController extends BaseRoute {
         this.router.get(`${this.path}/track/:track_id/players`, this.getAllPlayers);
         this.router.get(`${this.path}/track/:track_id/submissions`, this.getAllSubmissions);
         this.router.get(`${this.path}/challenge/:track_id/submissions`, this.challengeSubmissions);
+        this.router.get(`${this.path}/previous-challenge/:track_id/:date`, this.previousChallenge)
     }
  
     public getAll = async (request: express.Request, response: express.Response) => {
@@ -126,6 +127,35 @@ export class TrackController extends BaseRoute {
             const format = date.toLocaleDateString().split('/');
             const data = `${format[2]}-${parseInt(format[0]) <= 10 ? `0${format[0]}` : format[0]}-${format[1]}`;
             const active_challenge = await this.challengeRepo.single(data, 'date');
+            
+            const challenges = await getRepository(SubmissionEntity)
+                .createQueryBuilder("submission")
+                .where({ track_id: track_id, challenge_id: active_challenge.id})
+                .orderBy("submission.score", "DESC")
+                .getMany();
+            
+            if (challenges === undefined) {
+                response.json({
+                    data: []
+                });
+                return;
+            }
+
+            response.json({
+                data: challenges,
+                challenge: active_challenge
+            });
+        }
+        catch (err) {
+            response.status(500).send(err);
+        }
+    }
+
+    public previousChallenge = async (request: express.Request, response: express.Response) => {
+        try {
+            const track_id: any = request.params.track_id;
+            const date = request.params.date;
+            const active_challenge = await this.challengeRepo.single(date, 'date');
             
             const challenges = await getRepository(SubmissionEntity)
                 .createQueryBuilder("submission")
