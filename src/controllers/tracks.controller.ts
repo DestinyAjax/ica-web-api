@@ -126,7 +126,7 @@ export class TrackController extends BaseRoute {
             const format = date.toLocaleDateString().split('/');
             const data = `${format[2]}-${parseInt(format[0]) <= 10 ? `0${format[0]}` : format[0]}-${format[1]}`;
             const active_challenge = await this.challengeRepo.single(data, 'date');
-            console.log(active_challenge);
+            console.log(DataCue);
             const challenges = await getRepository(SubmissionEntity)
                 .createQueryBuilder("submission")
                 .where({ track_id: track_id, challenge_id: active_challenge.id})
