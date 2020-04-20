@@ -20,6 +20,7 @@ export class ChallengeController extends BaseRoute {
         this.router.delete(`${this.path}/challenge/:challenge_id`, this.deleteOne);
         this.router.put(`${this.path}/challenge/:challenge_id`, this.update);
         this.router.get(`${this.path}/challenge/:challenge_id`, this.view);
+        this.router.get(`${this.path}/challenge/active`, this.getActive);
     }
  
     public getAll = async (request: express.Request, response: express.Response) => {
@@ -113,6 +114,18 @@ export class ChallengeController extends BaseRoute {
             const challenge_id = request.params.challenge_id;
             const challenge = await this.challengeRepo.byId(challenge_id);
             
+            response.json({
+                data: challenge
+            });
+        }
+        catch (err) {
+            response.status(500).send(err);
+        }
+    }
+
+    public getActive = async (request: express.Request, response: express.Response) => {
+        try {
+            const challenge = await this.challengeRepo.single('true', 'status');
             response.json({
                 data: challenge
             });

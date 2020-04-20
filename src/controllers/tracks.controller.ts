@@ -125,7 +125,7 @@ export class TrackController extends BaseRoute {
             const date = new Date();
             const format = date.toLocaleDateString().split('/');
             const data = `${format[2]}-${parseInt(format[0]) <= 10 ? `0${format[0]}` : format[0]}-${format[1]}`;
-            const active_challenge = await this.challengeRepo.single('2020-04-19', 'date');
+            const active_challenge = await this.challengeRepo.single(data, 'date');
             
             const challenges = await getRepository(SubmissionEntity)
                 .createQueryBuilder("submission")
