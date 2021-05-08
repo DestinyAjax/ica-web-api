@@ -27,7 +27,7 @@
     "nodemailer": "^6.4.2",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.2.22",
+    "typeorm": "^0.2.25",
     "url-parse": "^1.4.7"
   },
   "devDependencies": {
